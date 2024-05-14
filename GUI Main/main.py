@@ -188,21 +188,6 @@ def main():#Lager en funksjon som heter main
                                 cursor="hand2",#Endrer cursor til en hånd når du holder over knappen
                                 command=LagerCTKVinduet).pack(pady=15)
     
-    KonfiguererAvBrukere = ctk.CTkLabel(Root,#label for sletting av ting i hoveddatabasen
-                        text_color="white",#Endrer fargen på teksten til svart
-                        font=("TkHeadingFont", 20),#Endrer fonten til 20
-                        text="Legg til bruker eller fjern eksisterende bruker"#lager en tekst som står skriv inn ditt passord
-                        ).pack()#Pakker inn passordlabel
-                                
-    KonfiguererAvBrukereButton = ctk.CTkButton(Root,#Lager en knapp som heter slettbrukerbutton
-                                text="Konfiguere Brukere",#Endrer teksten på det som står i knappen
-                                fg_color="blue",#Endrer fargen på på selve knappen
-                                text_color="white",#Endrer fargen på teksten til knappen
-                                hover_color="#151B54",#Endrer fargen til knappen når du holder over den
-                                font=("TkMenuFont", 15),#Endrer fonten skriften til knappen
-                                cursor="hand2",#Endrer cursor til en hånd når du holder over knappen
-                                command=EndreBrukerVinduCTK).pack(pady=15) #Kommandoen som kjører en funksjon
-
     Root.mainloop()#Kjører programmet
 
 
@@ -277,96 +262,6 @@ def LagerCTKVinduet():#Lager en funksjon som heter main
                              font=("TkMenuFont", 15),
                              cursor="hand2",
                              command=VinduCTK.destroy).pack(pady=15)
-
-def EndreBrukerVinduCTK():#Lager en funksjon som heter main
-    EndreBrukerVinduCTK = ctk.CTk()#Lager et vindu som heter Root
-    EndreBrukerVinduCTK.title("Konfigurer på Brukerne")#Setter tittelen på vinduet til Endre i systemet"
-    EndreBrukerVinduCTK.eval('tk::PlaceWindow . center')#Setter vinduet i midten av skjermen
-    EndreBrukerVinduCTK.geometry("400x500",)#Setter størrelsen på vinduet til 300x300
-    EndreBrukerVinduCTK.configure(fg='#001B3A')#Endrer bakgrunnsfargen til grå
-
-    LeggTilBrukerButton = ctk.CTkButton(EndreBrukerVinduCTK,
-                             text="Legg til en bruker",
-                             fg_color="blue",
-                             text_color="white",
-                             hover_color="#151B54",
-                             font=("TkMenuFont", 15),
-                             cursor="hand2",
-                            command=LeggTilBrukerITabell).pack(pady=15)
-    
-    SlettBruker = ctk.CTkButton(EndreBrukerVinduCTK,
-                             text="Fjern en bruker",
-                             fg_color="red",
-                             text_color="white",
-                             hover_color="#151B54",
-                             font=("TkMenuFont", 15),
-                             cursor="hand2",
-                            command=SlettBrukerITabell).pack(pady=15)
-    
-    TilbakeButton2 = ctk.CTkButton(EndreBrukerVinduCTK,
-                             text="Tilbake til hovedmeny",
-                             fg_color="green",
-                             text_color="white",
-                             hover_color="#151B54",
-                             font=("TkMenuFont", 15),
-                             cursor="hand2",
-                             command=EndreBrukerVinduCTK.destroy).pack(pady=15)
-    
-
-def LeggTilBrukerITabell():#Lager en funksjon som heter LeggTilBrukerITabell
-    Brukernavn = input("Skriv inn Brukernavn: ")#Ber brukeren om å skrive inn brukernavn
-    Passord = input("Skriv inn Passord: ")#Ber brukeren om å skrive inn passord
-    Fornavn = input("Skriv inn Fornavn: ")# Ber brukeren om å skrive inn fornavn
-    Etternavn = input("Skriv inn Etternavn: ")#Ber brukeren om å skrive inn etternavn
-    Epost = input("Legg til epost: ")#Ber brukeren om å skrive inn epost
-    Telefonnummer = int(input("Legg til telefonnummer: "))#Ber brukeren om å skrive inn telefonnummer
-    Postnummer = int(input("Skriv inn Postnummer: "))#Ber brukeren om å skrive inn postnummer
-
-    KrypertPassord = hashlib.sha256(Passord.encode()).hexdigest()#Krypterer passordet til brukeren med sha256 
-    Cursor.execute('''
-        INSERT INTO Brukerdatabase(
-                   Brukernavn, 
-                   Passord, 
-                   Fornavn, 
-                   Etternavn, 
-                   Epost, 
-                   Telefonnummer, 
-                   Postnummer)
-        VALUES(?, ?, ?, ?, ?, ?, ?)
-    ''', (
-        Brukernavn, 
-        KrypertPassord, 
-        Fornavn, 
-        Etternavn, 
-        Epost, 
-        Telefonnummer, 
-        Postnummer))#Legger til brukeren i databasen med brukernavn, passord, fornavn, etternavn, epost, telefonnummer og postnummer
-    DB.commit()#Lagrer endringene i databasen
-
-    CTkMessagebox(
-        title="Info", 
-        message="Bruker er lagt til i databasen", 
-        icon="info",
-        button_color="green",  
-        option_1="OK")#Lager en messagebox som sier at brukeren er lagt til i databasen
-
-
-    
-
-def SlettBrukerITabell():#Lager en funksjon som heter SlettBrukerITabell
-    BrukerId = int(input("Skriv inn ID til brukeren du skal slette: "))#Ber brukeren om å skrive inn brukerID
-    Cursor.execute('''
-        DELETE FROM Brukerdatabase WHERE id = ?
-    ''', (BrukerId,))#Sletter brukeren fra databasen
-    DB.commit()
-    CTkMessagebox(
-        message="Brukeren er nå fjernet fra databasen", 
-        title="Info", 
-        icon="check",
-        button_color="red", 
-        option_1="OK")#Lager en messagebox som sier at brukeren er fjernet fra databasen
-    
-
 
 
 if __name__ == '__main__':#Hvis filen blir kjørt direkte
